@@ -60,6 +60,13 @@ export class AppComponent implements OnInit {
       serverPublicKey: vapidPublicKey
     }).then((subscription: any) => {
       // Send subscription to your server
+      navigator.clipboard.writeText(subscription).then(() => {
+        alert("your subscription copied to clipboard")
+        console.log('Text copied to clipboard');
+      }).catch(err => {
+        alert(err?.message ?? "something went wrong in clipboard")
+        console.error('Could not copy text: ', err);
+      });
       console.log('Notification Subscription: ', subscription);
       // You can store this subscription in your backend to send notifications
     }).catch((err: any) => {
