@@ -1,3 +1,4 @@
+importScripts("ngsw-worker.js");
 self.addEventListener("push", (event) => {
   console.log("push event", event);
   const data = event.data ? event.data.json() : {};
