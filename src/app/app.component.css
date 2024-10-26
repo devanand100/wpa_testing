@@ -1,0 +1,10 @@
+.code {
+  white-space: pre-wrap; /* Preserve whitespace and break lines */
+  word-wrap: break-word; /* Allow long words to break */
+  overflow-wrap: break-word; /* Break long words if necessary */
+  font-family: monospace; /* Use monospace font for better readability */
+  padding: 10px; /* Add some padding for aesthetics */
+  border: 1px solid #ccc; /* Optional: add a border */
+  border-radius: 5px; /* Optional: round the corners */
+  background-color: #f9f9f9; /* Optional: light background color */
+}

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl } from '@angular/forms';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 
 @Component({
@@ -10,7 +11,7 @@ export class AppComponent implements OnInit {
   title = 'wpa_tes';
   promptEvent: any;
   promptTriggered = false
-
+  subscriptionText = ""
   constructor(private swUpdate: SwUpdate, private swPush: SwPush) {
     this.swUpdate.checkForUpdate().then((r) => {
       console.log("root rout")
@@ -60,13 +61,7 @@ export class AppComponent implements OnInit {
       serverPublicKey: vapidPublicKey
     }).then((subscription: any) => {
       // Send subscription to your server
-      navigator.clipboard.writeText(JSON.stringify(subscription)).then(() => {
-        alert("your subscription copied to clipboard")
-        console.log('Text copied to clipboard');
-      }).catch(err => {
-        alert(err?.message ?? "something went wrong in clipboard")
-        console.error('Could not copy text: ', err);
-      });
+      this.subscriptionText = JSON.stringify(subscription, null, 2)
       console.log('Notification Subscription: ', subscription);
       // You can store this subscription in your backend to send notifications
     }).catch((err: any) => {
