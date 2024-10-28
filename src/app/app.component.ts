@@ -74,6 +74,7 @@ export class AppComponent implements OnInit ,AfterViewInit {
     if (this.swPush.isEnabled) {
       // Request permission for notifications
       Notification.requestPermission().then(permission => {
+        alert(`permission --------->${permission}`)
         console.log('permission: ', permission);
         if (permission === 'granted') {
           this.subscribeToNotifications()
@@ -118,6 +119,7 @@ export class AppComponent implements OnInit ,AfterViewInit {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready
         .then(registration => {
+          alert("Service Worker is ready:")
           console.log('Service Worker is ready:', registration);
           this.requestNotifications()
         })
