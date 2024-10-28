@@ -24,9 +24,10 @@ export class AppComponent implements OnInit {
       // Stash the event so it can be triggered later
       this.promptEvent = event;
       // Show your custom install button
-      console.log("isInstalled--->",this.isInstalled)
+      
       this.showInstallButton();
     
+      this.showInstallationUp()
       this.checkServiceWorker()
     });
   }
@@ -80,6 +81,11 @@ export class AppComponent implements OnInit {
     } else {
       console.warn('Notifications not supported in this browser');
     }
+  }
+
+   isIos(){
+    const userAgent = window.navigator.userAgent.toLowerCase();
+    return /iphone|ipad|ipod/.test(userAgent);
   }
 
   private subscribeToNotifications() {
@@ -149,4 +155,20 @@ export class AppComponent implements OnInit {
     }
   }
 
+  showInstallationUp() {
+    const isInStandaloneMode = () => ('standalone' in window.navigator) && (window.navigator.standalone);
+    const isAppInstalledOnIos = this.isIos() && isInStandaloneMode();
+    const isChromeOnWindows = /chrome/i.test(navigator.userAgent) && /windows/i.test(navigator.userAgent);
+   
+    if (isAppInstalledOnIos) {
+      console.log('App is installed on the home screen');
+    } else {
+      // if (!isChromeOnWindows) {
+        
+        if (window.AddToHomeScreenInstance) {
+          window.AddToHomeScreenInstance.show();
+        // }
+      }
+    }
+  }
 }
