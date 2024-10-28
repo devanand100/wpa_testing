@@ -20,6 +20,7 @@ export class AppComponent implements OnInit ,AfterViewInit {
   ngAfterViewInit(): void {
     this.showInstallationUp()
     this.checkServiceWorker()
+    setTimeout(()=>  this.checkServiceWorker() , 5000)
   }
 
   ngOnInit(): void {
