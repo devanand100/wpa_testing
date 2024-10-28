@@ -38,7 +38,6 @@ export class AppComponent implements OnInit {
 
   requestNotifications() {
     // Check if notifications are supported
-    console.log(this.swPush.isEnabled)
     if (this.swPush.isEnabled) {
       // Request permission for notifications
       Notification.requestPermission().then(permission => {
@@ -71,6 +70,20 @@ export class AppComponent implements OnInit {
 
   showInstallButton() {
     this.promptTriggered = true
+  }
+
+  copyToClipboard() {
+    const selBox = document.createElement('textarea');
+    selBox.style.position = 'fixed';
+    selBox.style.left = '0';
+    selBox.style.top = '0';
+    selBox.style.opacity = '0';
+    selBox.value = this.subscriptionText;
+    document.body.appendChild(selBox);
+    selBox.focus();
+    selBox.select();
+    document.execCommand('copy');
+    document.body.removeChild(selBox);
   }
 
   installApp() {
