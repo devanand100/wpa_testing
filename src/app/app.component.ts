@@ -13,11 +13,15 @@ export class AppComponent implements OnInit {
   promptTriggered = false
   isInstalled = false;
   subscriptionText = ""
-  constructor(private swPush: SwPush) {
+  constructor(private swUpdate:SwUpdate, private swPush: SwPush) {
     this.isInstalled = this.isPwaInstalled()
   }
 
   ngOnInit(): void {
+
+    this.showInstallationUp()
+    this.checkServiceWorker()
+    
     window.addEventListener('beforeinstallprompt', (event) => {
       // Prevent the mini-info bar from appearing on mobile
       event.preventDefault();
