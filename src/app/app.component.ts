@@ -19,8 +19,6 @@ export class AppComponent implements OnInit ,AfterViewInit {
 
   ngAfterViewInit(): void {
     this.showInstallationUp()
-    this.checkServiceWorker()
-    setTimeout(()=>  this.checkServiceWorker() , 5000)
   }
 
   ngOnInit(): void {
@@ -74,7 +72,6 @@ export class AppComponent implements OnInit ,AfterViewInit {
     if (this.swPush.isEnabled) {
       // Request permission for notifications
       Notification.requestPermission().then(permission => {
-        alert(`permission --------->${permission}`)
         console.log('permission: ', permission);
         if (permission === 'granted') {
           this.subscribeToNotifications()
@@ -145,6 +142,12 @@ export class AppComponent implements OnInit ,AfterViewInit {
     document.body.removeChild(selBox);
   }
 
+  async fakeLogin() {
+    new Promise((r) => setTimeout(r, 2000)).then((r) => {
+       this.checkServiceWorker()
+     })
+
+  }
   installApp() {
     if (this.promptEvent) {
       // Show the install prompt
