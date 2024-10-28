@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, OnInit } from '@angular/core';
 import { FormControl } from '@angular/forms';
 import { SwPush, SwUpdate } from '@angular/service-worker';
 
@@ -7,7 +7,7 @@ import { SwPush, SwUpdate } from '@angular/service-worker';
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit ,AfterViewInit {
   title = 'wpa_tes';
   promptEvent: any;
   promptTriggered = false
@@ -17,18 +17,16 @@ export class AppComponent implements OnInit {
     this.isInstalled = this.isPwaInstalled()
   }
 
-  ngOnInit(): void {
-
+  ngAfterViewInit(): void {
     this.showInstallationUp()
     this.checkServiceWorker()
-    
+  }
+
+  ngOnInit(): void {
+
     window.addEventListener('beforeinstallprompt', (event) => {
-      // Prevent the mini-info bar from appearing on mobile
       event.preventDefault();
-      // Stash the event so it can be triggered later
       this.promptEvent = event;
-      // Show your custom install button
-      
       this.showInstallButton();
     
       this.showInstallationUp()
@@ -167,11 +165,11 @@ export class AppComponent implements OnInit {
     if (isAppInstalledOnIos) {
       console.log('App is installed on the home screen');
     } else {
-      // if (!isChromeOnWindows) {
+      if (!isChromeOnWindows) {
         
         if (window.AddToHomeScreenInstance) {
           window.AddToHomeScreenInstance.show();
-        // }
+        }
       }
     }
   }
