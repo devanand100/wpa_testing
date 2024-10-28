@@ -180,7 +180,8 @@
 
 <main class="main">
   <div class="content">
-    <p>install prompt event triggered:--{{ promptTriggered }}</p>
+    
+    <p> App is {{isInstalled ? "installed" : "not installed"}} </p>
     <button (click)="requestNotifications()">Enable Notifications</button>
 
     <button

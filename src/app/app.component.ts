@@ -11,38 +11,68 @@ export class AppComponent implements OnInit {
   title = 'wpa_tes';
   promptEvent: any;
   promptTriggered = false
+  isInstalled = false;
   subscriptionText = ""
-  constructor(private swUpdate: SwUpdate, private swPush: SwPush) {
-    this.swUpdate.checkForUpdate().then((r) => {
-      console.log("root rout")
-      if (r) {
-        console.log("new version avilable")
-        window.location.reload();
-      }
-    })
-
+  constructor(private swPush: SwPush) {
+    this.isInstalled = this.isPwaInstalled()
   }
 
   ngOnInit(): void {
     window.addEventListener('beforeinstallprompt', (event) => {
-      console.log(event)
       // Prevent the mini-info bar from appearing on mobile
       event.preventDefault();
       // Stash the event so it can be triggered later
       this.promptEvent = event;
       // Show your custom install button
+      console.log("isInstalled--->",this.isInstalled)
       this.showInstallButton();
+    
+      this.checkServiceWorker()
     });
   }
 
+  isPwaInstalled() {
+    return window.matchMedia('(display-mode: standalone)').matches;
+  }
+
+  getUniqueIdentifier() {
+    // Check if identifier already exists in localStorage
+    let identifier = localStorage.getItem('deviceId');
+    if (!identifier) {
+      identifier = 'device-' + Date.now(); 
+      localStorage.setItem('deviceId', identifier);
+    }
+    return identifier;
+  }
+
+  checkNotificationSubscription() {
+  if ('serviceWorker' in navigator && 'PushManager' in window) {
+    navigator.serviceWorker.ready.then((registration) => {
+      return registration.pushManager.getSubscription();
+    })
+      .then((subscription) => {
+        if (subscription) {
+          console.log('User is subscribed:', subscription);
+        } else {
+          console.log('User is not subscribed.');
+        }
+      })
+      .catch((error) => {
+        console.error('Error checking subscription:', error);
+      });
+  } else {
+    console.warn('Push messaging is not supported in this browser.');
+  }
+}
 
   requestNotifications() {
     // Check if notifications are supported
     if (this.swPush.isEnabled) {
       // Request permission for notifications
       Notification.requestPermission().then(permission => {
+        console.log('permission: ', permission);
         if (permission === 'granted') {
-          this.subscribeToNotifications();
+          this.subscribeToNotifications()
         } else {
           console.error('Notification permission denied');
         }
@@ -60,6 +90,7 @@ export class AppComponent implements OnInit {
       serverPublicKey: vapidPublicKey
     }).then((subscription: any) => {
       // Send subscription to your server
+    
       this.subscriptionText = JSON.stringify(subscription, null, 2)
       console.log('Notification Subscription: ', subscription);
       // You can store this subscription in your backend to send notifications
@@ -72,6 +103,21 @@ export class AppComponent implements OnInit {
     this.promptTriggered = true
   }
 
+  checkServiceWorker() {
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.ready
+        .then(registration => {
+          console.log('Service Worker is ready:', registration);
+          this.requestNotifications()
+        })
+        .catch(err => {
+          console.error('Service Worker not ready:', err);
+        });
+    } else {
+      console.warn('Service workers are not supported in this browser.');
+    }
+  }
+  
   copyToClipboard() {
     const selBox = document.createElement('textarea');
     selBox.style.position = 'fixed';
@@ -102,4 +148,5 @@ export class AppComponent implements OnInit {
       });
     }
   }
+
 }
