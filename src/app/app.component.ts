@@ -19,7 +19,7 @@ export class AppComponent implements OnInit ,AfterViewInit {
 
   ngAfterViewInit(): void {
     this.showInstallationUp()
-    this.checkServiceWorker("VIEWiNIT")
+    this.checkServiceWorker()
   }
 
   ngOnInit(): void {
@@ -28,9 +28,9 @@ export class AppComponent implements OnInit ,AfterViewInit {
       event.preventDefault();
       this.promptEvent = event;
       this.showInstallButton();
-      
+    
       this.showInstallationUp()
-      this.checkServiceWorker("oninit")
+      this.checkServiceWorker()
     });
   }
 
@@ -81,6 +81,7 @@ export class AppComponent implements OnInit ,AfterViewInit {
         }
       });
     } else {
+      alert("swPush is not enabled")
       console.warn('Notifications not supported in this browser');
     }
   }
@@ -103,6 +104,7 @@ export class AppComponent implements OnInit ,AfterViewInit {
       console.log('Notification Subscription: ', subscription);
       // You can store this subscription in your backend to send notifications
     }).catch((err: any) => {
+      alert(`subscription error ${err?.message}`)
       console.error('Could not subscribe to notifications', err);
     });
   }
@@ -111,8 +113,7 @@ export class AppComponent implements OnInit ,AfterViewInit {
     this.promptTriggered = true
   }
 
-  checkServiceWorker(TYPE:String) {
-    console.log('TYPE: ', TYPE);
+  checkServiceWorker() {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.ready
         .then(registration => {
@@ -123,7 +124,7 @@ export class AppComponent implements OnInit ,AfterViewInit {
           console.error('Service Worker not ready:', err);
         });
     } else {
-      alert("Service workers are not supported in this browser.")
+      alert("Service workers are not in navigator.")
     }
   }
   
